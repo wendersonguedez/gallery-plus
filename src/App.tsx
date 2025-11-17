@@ -9,8 +9,10 @@ import InputText from "./components/input-text";
 import SearchIcon from "./assets/icons/search.svg?react";
 import InputCheckbox from "./components/input-checkbox";
 import InputSingleFile from "./components/input-single-file";
+import { useForm } from "react-hook-form";
 
 export default function App() {
+	const form = useForm();
 	return (
 		<div className="grid gap-7 p-6">
 			<div className="flex gap-3">
@@ -62,7 +64,17 @@ export default function App() {
 			</div>
 
 			<div>
-				<InputSingleFile />
+				{/**
+				 * A prop `form` passa o objeto completo retornado pelo `useForm()`.
+				 * Isso permite que o componente `InputSingleFile` acesse outros
+				 * métodos e estados do formulário, como `formState.errors` ou `setValue`.
+				 *
+				 * O `...form.register("file")` é a forma de conectar este input ao react-hook-form.
+				 * Ele "espalha" (spread) as props necessárias (como onChange, onBlur, name, ref)
+				 * para que a biblioteca possa gerenciar o estado e a validação deste campo.
+				 * "file" é o nome que este campo terá nos dados do formulário.
+				 */}
+				<InputSingleFile form={form} {...form.register("file")} />
 			</div>
 		</div>
 	);
