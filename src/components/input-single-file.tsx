@@ -1,7 +1,8 @@
 import { type VariantProps, tv } from "tailwind-variants";
 import Icon from "./icon";
-import Text from "./text";
+import Text, { textVariants } from "./text";
 import UploadFileIcon from "../assets/icons/upload-file.svg?react";
+import FileImageIcon from "../assets/icons/image.svg?react";
 
 export const inputSingleFileVariants = tv({
 	base: `
@@ -38,9 +39,11 @@ export const inputSingleFileIconVariants = tv({
 
 interface InputSingleFileProps
 	extends VariantProps<typeof inputSingleFileVariants>,
-		React.ComponentProps<"input"> {}
+		Omit<React.ComponentProps<"input">, "size"> {
+	error?: React.ReactNode;
+}
 
-export default function InputSingleFile({ size }: InputSingleFileProps) {
+export default function InputSingleFile({ size, error }: InputSingleFileProps) {
 	return (
 		<div>
 			<div className="w-full relative group cursor-pointer">
@@ -57,6 +60,35 @@ export default function InputSingleFile({ size }: InputSingleFileProps) {
 						Arraste o arquivo aqui <br />
 						ou clique para selecionar
 					</Text>
+				</div>
+				{error && (
+					<Text variant="label-small" className="text-accent-red">
+						Erro no campo
+					</Text>
+				)}
+
+				{/* TODO: Poderia implementar um mapeamento dos ícones, passando para o SVG o ícone de acordo com o arquivo  */}
+				<div className="flex gap-3 items-center border border-solid border-border-primary mt-5 p-3 rounded">
+					<Icon svg={FileImageIcon} className="fill-white w-6 h-6" />
+					<div className="flex flex-col">
+						<div className="truncate max-w-80">
+							<Text variant="label-medium" className="text-placeholder">
+								Nome do arquivo-com-muito-nome.jpg
+							</Text>
+						</div>
+						<div className="flex">
+							{/* Importante colocar o type="button" para que não seja feito um submit */}
+							<button
+								type="button"
+								className={textVariants({
+									variant: "label-small",
+									className: "text-accent-red cursor-pointer hover:underline",
+								})}
+							>
+								Remover
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
