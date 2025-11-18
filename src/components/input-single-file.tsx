@@ -46,6 +46,7 @@ interface InputSingleFileProps
 	form: any;
 	allowedExtensions: string[];
 	maxFileSizeInMB: number;
+	replaceBy: React.ReactNode;
 	error?: React.ReactNode;
 }
 
@@ -55,6 +56,7 @@ export default function InputSingleFile({
 	error,
 	allowedExtensions,
 	maxFileSizeInMB,
+	replaceBy,
 	...props
 }: InputSingleFileProps) {
 	const formValues = useWatch({ control: form.control });
@@ -131,6 +133,7 @@ export default function InputSingleFile({
 				</>
 			) : (
 				<>
+					{replaceBy}
 					{/* TODO: Poderia implementar um mapeamento dos ícones, passando para o SVG o ícone de acordo com o arquivo  */}
 					<div className="flex gap-3 items-center border border-solid border-border-primary mt-5 p-3 rounded">
 						<Icon svg={FileImageIcon} className="fill-white w-6 h-6" />
