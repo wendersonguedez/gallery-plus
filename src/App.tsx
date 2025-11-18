@@ -74,7 +74,12 @@ export default function App() {
 				 * para que a biblioteca possa gerenciar o estado e a validação deste campo.
 				 * "file" é o nome que este campo terá nos dados do formulário.
 				 */}
-				<InputSingleFile form={form} {...form.register("file")} />
+				<InputSingleFile
+					allowedExtensions={["png", "jpg", "jpeg", "webp"]}
+					maxFileSizeInMB={50}
+					form={form}
+					{...form.register("file")}
+				/>
 			</div>
 		</div>
 	);
