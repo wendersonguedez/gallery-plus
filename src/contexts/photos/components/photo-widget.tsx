@@ -58,7 +58,7 @@ export default function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
 
 			{!loading ? (
 				<Link
-					to={`/fotos/${photo.id}`}
+					to={`/photos/${photo.id}`}
 					className={buttonVariants({
 						variant: "secondary",
 						className: "px-2 py-2",
