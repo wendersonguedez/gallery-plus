@@ -13,7 +13,7 @@ export const imagePreviewImageVariants = tv({
 	defaultVariants: {},
 });
 
-interface ImageFilePreviewProps extends React.ComponentProps<"img"> {
+interface ImagePreviewProps extends React.ComponentProps<"img"> {
 	imageClassName?: string;
 }
 
@@ -21,7 +21,7 @@ export default function ImagePreview({
 	className,
 	imageClassName,
 	...props
-}: ImageFilePreviewProps) {
+}: ImagePreviewProps) {
 	return (
 		<div className={imagePreviewVariants({ className })} {...props}>
 			<img
