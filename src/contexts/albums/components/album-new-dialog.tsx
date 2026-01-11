@@ -17,6 +17,7 @@ import SelectCheckboxIllustration from "@/assets/images/select-checkbox.svg?reac
 import type React from "react";
 import Skeleton from "@/components/skeleton";
 import ImagePreview from "@/components/image-preview";
+import PhotoImageSelectable from "@/contexts/photos/components/photo-image-selectable";
 
 interface AlbumNewDialogProps {
 	trigger: React.ReactNode;
@@ -41,6 +42,10 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
 		},
 	];
 
+	function handleTogglePhoto(selected: boolean, photoId: string) {
+		console.log(selected, photoId);
+	}
+
 	return (
 		<Dialog>
 			{/* asChild - para não criar um botão, mas sim renderizar o componente */}
@@ -59,11 +64,14 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
 						{!isLoadingPhotos && photos.length > 0 && (
 							<div className="flex flex-wrap gap-2">
 								{photos.map((photo) => (
-									<ImagePreview
-										className="w-20 h-20 rounded"
+									<PhotoImageSelectable
 										key={photo.id}
-										title={photo.title}
 										src={`/images/${photo.imageId}`}
+										title={photo.title}
+										imageClassName="w-20 h-20"
+										onSelectImage={(selected) =>
+											handleTogglePhoto(selected, photo.id)
+										}
 									/>
 								))}
 							</div>
@@ -74,7 +82,7 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
 								{Array.from({ length: 7 }).map((_, index) => (
 									<Skeleton
 										key={`photo-loading-${index}`}
-										className="w-20 h-20 rounded"
+										className="w-20 h-20 rounded-lg"
 									/>
 								))}
 							</div>
@@ -92,7 +100,7 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
 				</DialogBody>
 
 				<DialogFooter>
-					<DialogClose>
+					<DialogClose asChild>
 						<Button variant="secondary">Cancelar</Button>
 					</DialogClose>
 				</DialogFooter>
