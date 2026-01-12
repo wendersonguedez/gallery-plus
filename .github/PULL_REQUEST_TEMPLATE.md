@@ -1,4 +1,4 @@
-### ⚛️ [Título da PR - Ex: Ajuste na seleção de datas do Dashboard]
+## ⚛️ [Título da PR - Ex: Ajuste na seleção de datas do Dashboard]
 
 ### 📝 Descrição
 
@@ -16,7 +16,6 @@
 // Exemplo de uso:
 const { formatDate } = useDateFormatter();
 console.log(formatDate(new Date()));
-
 ```
 
 ### 🔨 O que foi feito
