@@ -28,3 +28,4 @@ data/
 
 # Server build output
 server/dist/
+.env
