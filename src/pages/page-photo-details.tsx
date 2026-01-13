@@ -4,12 +4,14 @@ import ImagePreview from "@/components/image-preview";
 import Skeleton from "@/components/skeleton";
 import Text from "@/components/text";
 import AlbumsListSelectable from "@/contexts/albums/components/albums-list-selectable";
+import useAlbums from "@/contexts/albums/hooks/use-albums";
 import PhotosNavigator from "@/contexts/photos/components/photos-navigator";
 import { Photo } from "@/contexts/photos/models/photo";
 import { useParams } from "react-router";
 
 export default function PagePhotoDetails() {
 	const { id } = useParams();
+	const { albums, isLoadingAlbums } = useAlbums();
 
 	/**
 	 * Constantes apenas para servir como mock.
@@ -65,9 +67,9 @@ export default function PagePhotoDetails() {
 					</Text>
 
 					<AlbumsListSelectable
-						albums={photo.albums}
+						albums={albums}
+						loading={isLoadingAlbums}
 						photo={photo}
-						loading={isLoadingPhoto}
 					/>
 				</div>
 			</div>
