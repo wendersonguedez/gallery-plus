@@ -15,8 +15,6 @@ export default function AlbumsListSelectable({
 	loading,
 	albums,
 	photo,
-	className,
-	...props
 }: AlbumsListSelectableProps) {
 	/**
 	 * Verifica se alguma das fotos tem o alguns dos álbums em questão.

@@ -6,34 +6,24 @@ import Text from "@/components/text";
 import AlbumsListSelectable from "@/contexts/albums/components/albums-list-selectable";
 import useAlbums from "@/contexts/albums/hooks/use-albums";
 import PhotosNavigator from "@/contexts/photos/components/photos-navigator";
-import { Photo } from "@/contexts/photos/models/photo";
+import usePhoto from "@/contexts/photos/hooks/use-photo";
 import { useParams } from "react-router";
 
 export default function PagePhotoDetails() {
 	const { id } = useParams();
+	const { photo, isLoadingPhoto } = usePhoto(id);
 	const { albums, isLoadingAlbums } = useAlbums();
 
-	/**
-	 * Constantes apenas para servir como mock.
-	 */
-	const isLoadingPhoto = false;
-	const photo = {
-		id: "1",
-		title: "ola mundo",
-		imageId: "portrait-tower.png",
-		albums: [
-			{ id: "123", title: "album 1" },
-			{ id: "321", title: "album 2" },
-			{ id: "213", title: "album 3" },
-		],
-	} as Photo;
+	if (!isLoadingPhoto && !photo) {
+		return <div>Foto não encontrada</div>;
+	}
 
 	return (
 		<Container>
 			<header className="flex items-center justify-between gap-8 mb-8">
 				{!isLoadingPhoto ? (
 					<Text as="h2" variant="heading-large">
-						{photo.title}
+						{photo?.title}
 					</Text>
 				) : (
 					<Skeleton className="w-48 h-8" />
@@ -46,8 +36,8 @@ export default function PagePhotoDetails() {
 				<div className="space-y-3 mb-4">
 					{!isLoadingPhoto ? (
 						<ImagePreview
-							src={`/images/${photo?.imageId}`}
-							title={photo.title}
+							src={`${import.meta.env.VITE_IMAGES_URL}/${photo?.imageId}`}
+							title={photo?.title}
 							imageClassName="h-[21rem] rounded-lg"
 						/>
 					) : (
@@ -66,11 +56,15 @@ export default function PagePhotoDetails() {
 						Álbuns
 					</Text>
 
-					<AlbumsListSelectable
-						albums={albums}
-						loading={isLoadingAlbums}
-						photo={photo}
-					/>
+					{!isLoadingPhoto && photo ? (
+						<AlbumsListSelectable
+							albums={albums}
+							loading={isLoadingAlbums}
+							photo={photo}
+						/>
+					) : (
+						<Skeleton className="h-[2.5rem]" />
+					)}
 				</div>
 			</div>
 		</Container>
