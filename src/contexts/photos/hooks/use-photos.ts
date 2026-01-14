@@ -11,6 +11,7 @@ import type { Photo } from "@/contexts/photos/models/photo";
  */
 const toSearchParams = createSerializer({
 	albumId: parseAsString,
+	q: parseAsString,
 });
 
 export default function usePhotos() {
@@ -20,10 +21,11 @@ export default function usePhotos() {
 	 * useQueryState("albumId") => chave para identificar na URL => albumId = 123
 	 */
 	const [albumId, setAlbumId] = useQueryState("albumId");
+	const [q, setQ] = useQueryState("q");
 
 	const { data, isLoading } = useQuery<Photo[]>({
-		queryKey: ["photos", albumId],
-		queryFn: () => fetcher(`/photos${toSearchParams({ albumId })}`),
+		queryKey: ["photos", albumId, q],
+		queryFn: () => fetcher(`/photos${toSearchParams({ albumId, q })}`),
 	});
 
 	return {
@@ -32,6 +34,8 @@ export default function usePhotos() {
 		filters: {
 			albumId,
 			setAlbumId,
+			q,
+			setQ,
 		},
 	};
 }
