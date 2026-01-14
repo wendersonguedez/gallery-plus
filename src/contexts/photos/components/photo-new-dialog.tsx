@@ -75,7 +75,9 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
 							allowedExtensions={["png", "jpg", "jpeg"]}
 							maxFileSizeInMB={50}
 							replaceBy={
-								<ImagePreview src={fileSource} className="w-full h-56" />
+								fileSource ? (
+									<ImagePreview src={fileSource} className="w-full h-56" />
+								) : null
 							}
 							error={form.formState.errors.file?.message}
 							{...form.register("file")}
