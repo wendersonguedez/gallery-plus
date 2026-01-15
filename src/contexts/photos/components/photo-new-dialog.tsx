@@ -45,24 +45,49 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
 
 	const file = form.watch("file");
 	const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
+	const albumsIds = form.watch("albumsIds");
+
+	/**
+	 * Controla a visibilidade do modal de cadastro
+	 */
 	const [modalOpen, setModalOpen] = React.useState(false);
 
-	React.useEffect(() => {
-		if (!modalOpen) {
-			form.reset();
-			form.clearErrors();
+	function handleToggleAlbum(albumId: string) {
+		const albumsIds = form.getValues("albumsIds") || [];
+		const albumsSet = new Set(albumsIds);
+
+		/**
+		 * Alterna (toggles) a seleção do álbum.
+		 * Se o ID já estiver na lista, remove; caso contrário, adiciona.
+		 */
+		if (albumsSet.has(albumId)) {
+			albumsSet.delete(albumId);
+		} else {
+			albumsSet.add(albumId);
 		}
-	}, [form, modalOpen]);
+
+		form.setValue("albumsIds", Array.from(albumsSet));
+	}
 
 	function handleSavePhoto(payload: PhotoNewFormData) {
 		console.log(payload);
 	}
 
+	/**
+	 * Gerencia a visibilidade do modal.
+	 * Se o modal estiver sendo fechado, reseta o formulário para garantir um estado limpo.
+	 */
+	function handleOpenChangeModal(isOpen: boolean) {
+		setModalOpen(isOpen);
+
+		if (!isOpen) {
+			form.reset();
+			form.clearErrors();
+		}
+	}
+
 	return (
-		/**
-		 * open e onOpenChange são estados para controlar a abertura e fechamento da modal.
-		 */
-		<Dialog open={modalOpen} onOpenChange={setModalOpen}>
+		<Dialog open={modalOpen} onOpenChange={handleOpenChangeModal}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
 			<DialogContent>
 				<form onSubmit={form.handleSubmit(handleSavePhoto)}>
@@ -102,10 +127,14 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
 									albums.length > 0 &&
 									albums.map((album) => (
 										<Button
+											type="button"
 											key={album.id}
-											variant="ghost"
+											variant={
+												albumsIds?.includes(album.id) ? "primary" : "secondary"
+											}
 											size="sm"
 											className="truncate"
+											onClick={() => handleToggleAlbum(album.id)}
 										>
 											{album.title}
 										</Button>

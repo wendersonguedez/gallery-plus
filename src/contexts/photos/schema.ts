@@ -7,7 +7,7 @@ export const photoNewFormSchema = z.object({
 		message: "A imagem é obrigatória!",
 	}),
 
-	albumsId: z.array(z.string().uuid()).optional(),
+	albumsIds: z.array(z.string().uuid()).optional(),
 });
 
 /**
