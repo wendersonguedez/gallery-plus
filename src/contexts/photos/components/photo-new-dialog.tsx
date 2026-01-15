@@ -1,3 +1,4 @@
+import React from "react";
 import Alert from "@/components/alert";
 import Button from "@/components/button";
 import {
@@ -44,13 +45,24 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
 
 	const file = form.watch("file");
 	const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
+	const [modalOpen, setModalOpen] = React.useState(false);
+
+	React.useEffect(() => {
+		if (!modalOpen) {
+			form.reset();
+			form.clearErrors();
+		}
+	}, [form, modalOpen]);
 
 	function handleSavePhoto(payload: PhotoNewFormData) {
 		console.log(payload);
 	}
 
 	return (
-		<Dialog>
+		/**
+		 * open e onOpenChange são estados para controlar a abertura e fechamento da modal.
+		 */
+		<Dialog open={modalOpen} onOpenChange={setModalOpen}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
 			<DialogContent>
 				<form onSubmit={form.handleSubmit(handleSavePhoto)}>
