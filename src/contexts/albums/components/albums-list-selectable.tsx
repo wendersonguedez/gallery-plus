@@ -1,9 +1,12 @@
-import { Photo } from "@/contexts/photos/models/photo";
-import { Album } from "@/contexts/albums/models/album";
+import React from "react";
 import Text from "@/components/text";
 import InputCheckbox from "@/components/input-checkbox";
 import Divider from "@/components/divider";
 import Skeleton from "@/components/skeleton";
+import usePhotoAlbums from "@/contexts/photos/hooks/use-photo-albums";
+
+import { Photo } from "@/contexts/photos/models/photo";
+import { Album } from "@/contexts/albums/models/album";
 
 interface AlbumsListSelectableProps extends React.ComponentProps<"ul"> {
 	loading?: boolean;
@@ -16,6 +19,9 @@ export default function AlbumsListSelectable({
 	albums,
 	photo,
 }: AlbumsListSelectableProps) {
+	const { managePhotoOnAlbum } = usePhotoAlbums();
+	const [isUpdatingPhoto, setIsUpdatingPhoto] = React.useTransition();
+
 	/**
 	 * Verifica se alguma das fotos tem o alguns dos álbums em questão.
 	 * Se sim, deixa o checkbox marcado.
@@ -35,12 +41,15 @@ export default function AlbumsListSelectable({
 			albumsId = [...photo.albums.map((album) => album.id), albumId];
 		}
 
-		console.log("Albuns que serão enviados para o backend: ", albumsId);
+		setIsUpdatingPhoto(async () => {
+			await managePhotoOnAlbum(photo.id, albumsId);
+		});
 	}
 
 	return (
 		<ul className="flex flex-col gap-4">
 			{!loading &&
+				photo &&
 				albums.length > 0 &&
 				albums.map((album, index) => (
 					<li key={album.id}>
@@ -49,8 +58,9 @@ export default function AlbumsListSelectable({
 								{album.title}
 							</Text>
 							<InputCheckbox
-								defaultChecked={isChecked(album.id)}
-								onClick={() => handlePhotoOnAlbums(album.id)}
+								checked={!!isChecked(album.id)}
+								onChange={() => handlePhotoOnAlbums(album.id)}
+								disabled={isUpdatingPhoto}
 							/>
 						</div>
 						{index < albums.length - 1 && <Divider className="mt-4" />}

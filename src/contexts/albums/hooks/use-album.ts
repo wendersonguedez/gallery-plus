@@ -4,10 +4,12 @@ import { toast } from "sonner";
 import { api } from "@/helpers/api";
 import { useQueryClient } from "@tanstack/react-query";
 import usePhotos from "@/contexts/photos/hooks/use-photos";
+import usePhotoAlbums from "@/contexts/photos/hooks/use-photo-albums";
 
 export default function useAlbum() {
 	const queryClient = useQueryClient();
 	const { photos } = usePhotos();
+	const { managePhotoOnAlbum } = usePhotoAlbums();
 
 	async function createAlbum(payload: AlbumNewFormData) {
 		try {
@@ -39,9 +41,7 @@ export default function useAlbum() {
 							return;
 						}
 
-						return api.put(`/photos/${photoId}/albums`, {
-							albumsIds: [...photosAlbumsIds, album.id],
-						});
+						managePhotoOnAlbum(photoId, [...photosAlbumsIds, album.id]);
 					})
 				);
 			}

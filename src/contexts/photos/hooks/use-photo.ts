@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Photo } from "@/contexts/photos/models/photo";
 import { PhotoNewFormData } from "@/contexts/photos/schema";
 import { toast } from "sonner";
+import usePhotoAlbums from "@/contexts/photos/hooks/use-photo-albums";
 
 interface PhotoDetailResponse extends Photo {
 	nextPhotoId?: string;
@@ -26,6 +27,8 @@ export default function usePhoto(id?: string) {
 
 	const queryClient = useQueryClient();
 
+	const { managePhotoOnAlbum } = usePhotoAlbums();
+
 	async function createPhoto(payload: PhotoNewFormData) {
 		try {
 			const { data: photo } = await api.post<Photo>("/photos", {
@@ -45,9 +48,7 @@ export default function usePhoto(id?: string) {
 			);
 
 			if (payload.albumsIds && payload.albumsIds.length > 0) {
-				await api.put(`/photos/${photo.id}/albums`, {
-					albumsIds: payload.albumsIds,
-				});
+				await managePhotoOnAlbum(photo.id, payload.albumsIds);
 			}
 
 			queryClient.invalidateQueries({ queryKey: ["photos"] });
