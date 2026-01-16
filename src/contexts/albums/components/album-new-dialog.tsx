@@ -35,7 +35,17 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
 	const { photos, isLoadingPhotos } = usePhotos();
 
 	function handleTogglePhoto(selected: boolean, photoId: string) {
-		console.log(selected, photoId);
+		const photosIds = form.getValues("photosIds") || [];
+		let newValue = [];
+
+		if (selected) {
+			newValue = [...photosIds, photoId];
+		} else {
+			// Cria um novo array, mas sem a foto selecionada no front-end.
+			newValue = photosIds.filter((id) => id !== photoId);
+		}
+
+		form.setValue("photosIds", newValue);
 	}
 
 	function handleSaveAlbum(payload: AlbumNewFormData) {
