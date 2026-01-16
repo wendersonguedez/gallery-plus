@@ -22,6 +22,14 @@ export default function useAlbum() {
 			if (payload.photosIds && payload.photosIds.length > 0) {
 				await Promise.all(
 					payload.photosIds.map((photoId) => {
+						/**
+						 * O endpoint de PUT substitui toda a lista de álbuns da foto.
+						 * Por isso, precisamos buscar os álbuns que a foto JÁ possui (via photos.find)
+						 * e enviar junto com o novo ID (album.id).
+						 *
+						 * Se enviássemos apenas o [album.id], a foto seria removida
+						 * de todos os outros álbuns anteriores.
+						 */
 						const photosAlbumsIds =
 							photos
 								.find((photo) => photo.id === photoId)
