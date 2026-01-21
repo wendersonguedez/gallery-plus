@@ -4,6 +4,7 @@ import { Photo } from "@/contexts/photos/models/photo";
 import { PhotoNewFormData } from "@/contexts/photos/schema";
 import { toast } from "sonner";
 import usePhotoAlbums from "@/contexts/photos/hooks/use-photo-albums";
+import { useNavigate } from "react-router";
 
 interface PhotoDetailResponse extends Photo {
 	nextPhotoId?: string;
@@ -11,6 +12,8 @@ interface PhotoDetailResponse extends Photo {
 }
 
 export default function usePhoto(id?: string) {
+	const navigate = useNavigate();
+
 	/**
 	 * Ao fazer 'useQuery<PhotoDetailResponse>', a propriedade 'data' passa a ter
 	 * todas as propriedades de 'Photo'.
@@ -44,7 +47,7 @@ export default function usePhoto(id?: string) {
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
-				}
+				},
 			);
 
 			if (payload.albumsIds && payload.albumsIds.length > 0) {
@@ -60,11 +63,27 @@ export default function usePhoto(id?: string) {
 		}
 	}
 
+	async function deletePhoto(photoId: string) {
+		try {
+			await api.delete(`/photos/${photoId}`);
+
+			toast.success("Foto excluída com sucesso!");
+
+			navigate("/");
+
+			queryClient.invalidateQueries({ queryKey: ["photos"] });
+		} catch (error) {
+			toast.error("Erro ao excluir foto!");
+			throw error;
+		}
+	}
+
 	return {
 		photo: data,
 		nextPhotoId: data?.nextPhotoId,
 		previousPhotoId: data?.previousPhotoId,
 		isLoadingPhoto: isLoading,
+		deletePhoto,
 		createPhoto,
 	};
 }
